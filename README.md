@@ -1,5 +1,5 @@
 # utokyo_syspro_baremetal
-Baremetal environment for "System programming lab" class in Dept. of Information Science, The University of Tokyo.
+Baremetal environment for "System programming lab" class in Dept. of Information Science, The University of Tokyo. (originated from [sykwer/utokyo_syspro_baremetal](https://github.com/sykwer/utokyo_syspro_baremetal))
 
 
 ## Dependencies
