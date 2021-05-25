@@ -40,6 +40,14 @@ The kernel will paint all the part of the window in ayame color.
 
 ![alt Physical memory map](https://raw.githubusercontent.com/pflab-ut/utokyo_syspro_baremetal_2021/master/images/ayame.png)
 
+## (OPTION) Build Environment Using Docker
+This repository provides the official build environment using Docker.
+If needed, do the following commands after installing Docker by yourself.
+
+```
+$ make docker-build # Only the first time
+$ make docker-make
+```
 
 ## Boot from USB
 Booting from USB is supported on UEFI-boot suppored systems. The writer tested USB boot on the following machines.

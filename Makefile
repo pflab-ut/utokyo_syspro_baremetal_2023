@@ -1,3 +1,5 @@
+DOCKER_IMAGE_NAME = syspro
+
 all: bootloader kernel apps OVMF.fd OVMF.fd copy
 
 OVMF.fd:
@@ -29,9 +31,17 @@ copy: bootloader kernel apps
 monitor:
 	socat - unix:qemu-monitor-socket
 
+docker-build: Dockerfile
+	docker build -t $(DOCKER_IMAGE_NAME) --no-cache=true\
+	  --build-arg USER_ID=$(shell id -u)\
+	  --build-arg GROUP_ID=$(shell id -g) .
+
+docker-make:
+	docker run -it --rm -v $(CURDIR):/work $(DOCKER_IMAGE_NAME) make -C /work
+
 clean:
 	make clean -C bootloader
 	make clean -C kernel
 	make clean -C apps
 
-.PHONY: all bootloader kernel apps copy qemu clean
+.PHONY: all bootloader kernel apps copy docker-run docker-build qemu clean
