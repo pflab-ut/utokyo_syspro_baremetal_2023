@@ -1,30 +1,37 @@
-CC = x86_64-w64-mingw32-gcc
-CFLAGS = -Wall -Wextra
-CFLAGS += -nostdinc -nostdlib -fno-builtin -fno-common
-# https://forum.osdev.org/viewtopic.php?f=1&t=28307
-CFLAGS += -fno-stack-check -fno-stack-protector -mno-stack-arg-probe
-CFLAGS += -Wl,--subsystem,10
+all: bootloader kernel apps OVMF.fd OVMF.fd copy
 
-all: build/OVMF.fd fs/EFI/BOOT/BOOTX64.EFI
+OVMF.fd:
+	cp /usr/share/ovmf/OVMF.fd $(CURDIR)
 
-build/BOOTX64.EFI: build/bootloader.o build/efi.o build/file.o build/hardware_info.o build/memory.o build/util.o
-	mkdir -p build
-	$(CC) $(CFLAGS) -e efi_main -o $@ $^
+bootloader:
+	make all -C bootloader
 
-build/%.o: %.c
-	mkdir -p build
-	$(CC) $(CFLAGS) -Iinclude -c -o $@ $<
+kernel:
+	make all -C kernel
 
-build/OVMF.fd:
-	mkdir -p build
-	wget -O build/OVMF.zip http://downloads.sourceforge.net/project/edk2/OVMF/OVMF-X64-r15214.zip
-	unzip build/OVMF.zip -d build
+apps:
+	make all -C apps
 
-fs/EFI/BOOT/BOOTX64.EFI: build/BOOTX64.EFI
+qemu:
+	qemu-system-x86_64 -m 4G -bios ./OVMF.fd -hda fat:rw:./fs \
+		-netdev user,id=u1,hostfwd=tcp::8080-:80 -device e1000,netdev=u1 \
+		-object filter-dump,id=f1,netdev=u1,file=dump.pcap \
+		-monitor unix:qemu-monitor-socket,server,nowait
+
+copy: bootloader kernel apps
 	mkdir -p fs/EFI/BOOT
-	cp $< $@
+	cp bootloader/BOOTX64.EFI fs/EFI/BOOT/
+	cp kernel/kernel ./fs/
+	cp apps/app1 ./fs/
+	cp apps/app2 ./fs/
+	cp apps/app3 ./fs/
+
+monitor:
+	socat - unix:qemu-monitor-socket
 
 clean:
-	rm -Rf build/* fs/*
+	make clean -C bootloader
+	make clean -C kernel
+	make clean -C apps
 
-.PHONY: all clean
+.PHONY: all bootloader kernel apps copy qemu clean
