@@ -224,14 +224,44 @@ struct EFI_FILE_INFO {
   CHAR16 FileName[64];
 };
 
+struct EFI_MP_SERVICES_PROTOCOL {
+  EFI_STATUS (*GetNumberOfProcessors)(
+      struct EFI_MP_SERVICES_PROTOCOL  *This,
+      UINTN *NumberOfProcessors,
+      UINTN *NumberOfEnabledProcessors);
+  /* EFI_MP_SERVICES_GET_PROCESSOR_INFO        GetProcessorInfo; */
+  char _dummy[8];
+  EFI_STATUS (*StartupAllAPs)(
+      struct EFI_MP_SERVICES_PROTOCOL *This,
+      void (*Procedure)(void *ProcedureArgument),
+      BOOLEAN SingleThread,
+      void *WaitEvent,
+      UINTN TimeoutInMicroSeconds,
+      void *ProcedureArgument,
+      UINTN **FailedCpuList
+  );
+  /* EFI_MP_SERVICES_STARTUP_THIS_AP           StartupThisAP; */
+  char _dummy2[8];
+  /* EFI_MP_SERVICES_SWITCH_BSP                SwitchBSP; */
+  char _dummy3[8];
+  /* EFI_MP_SERVICES_ENABLEDISABLEAP           EnableDisableAP; */
+  char _dummy4[8];
+  EFI_STATUS (*WhoAmI)(
+      struct EFI_MP_SERVICES_PROTOCOL *This,
+      UINTN *ProcessorNumber
+  );
+};
+
 extern struct EFI_SYSTEM_TABLE *SystemTable;
 extern struct EFI_CONSOLE_CONTROL_PROTOCOL *CCP;
 extern struct EFI_GRAPHICS_OUTPUT_PROTOCOL *GOP;
 extern struct EFI_SIMPLE_FILE_SYSTEM_PROTOCOL *SFSP;
+extern struct EFI_MP_SERVICES_PROTOCOL *MP;
 
 extern struct EFI_GUID ccp_guid;
 extern struct EFI_GUID gop_guid;
 extern struct EFI_GUID sfsp_guid;
+extern struct EFI_GUID mp_guid;
 extern struct EFI_GUID fi_guid;
 
 void efi_init(struct EFI_SYSTEM_TABLE *st);

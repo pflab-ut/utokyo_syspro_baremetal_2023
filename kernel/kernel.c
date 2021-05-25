@@ -1,7 +1,9 @@
 #include "hardware.h"
 #include "segmentation.h"
 
-void start(void *SystemTable __attribute__ ((unused)), struct HardwareInfo *_hardware_info) {
+#pragma GCC diagnostic ignored "-Wunused-parameter" // For l6 (kernel_param_dummy)
+
+void start(void *SystemTable __attribute__ ((unused)), struct HardwareInfo *_hardware_info, unsigned long long kernel_param_dummy) {
   // From here - Put this part at the top of start() function
   // Do not use _hardware_info directry since this data is located in UEFI-app space
   hardware_info = *_hardware_info;

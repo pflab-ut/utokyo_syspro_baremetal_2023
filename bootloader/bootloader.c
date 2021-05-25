@@ -45,6 +45,25 @@ void apple_support() {
   }
 }
 
+void ap_sum(void *_sum) {
+  UINTN pid;
+  EFI_STATUS status = MP->WhoAmI(MP, &pid);
+  assert(status, L"MP#WhoAmI error");
+
+  int * const sum = _sum;
+
+  // Ticket Lock Here
+
+  // Critical Section (Do not touch!)
+  for (int i = 0; i < 0x10000; i++) {
+    *sum = *sum + 1;
+  }
+
+  // Unlock Here
+
+  return;
+}
+
 EFI_STATUS efi_main(EFI_HANDLE ImageHandle, struct EFI_SYSTEM_TABLE *st) {
   EFI_STATUS status;
 
@@ -53,6 +72,21 @@ EFI_STATUS efi_main(EFI_HANDLE ImageHandle, struct EFI_SYSTEM_TABLE *st) {
   SystemTable->ConOut->ClearScreen(SystemTable->ConOut);
   check_pixel_format();
   apple_support();
+
+  puts(L"Checking Processors...\r\n");
+
+  UINTN ncpu, ncpue;
+  status  = MP->GetNumberOfProcessors(MP, &ncpu, &ncpue);
+  assert(status, L"MP#GetNumberOfProcessors error");
+
+  if (ncpu == 1) {
+    puts(L"Number of CPUs Error\r\n");
+    while (1);
+  }
+
+  UINTN sum = 0;
+  status = MP->StartupAllAPs(MP, ap_sum, 0, NULL, 0, &sum, NULL);
+  assert(status, L"MP#StartupAllAPs error");
 
   puts(L"Loading kernel image...\r\n");
 
@@ -153,6 +187,7 @@ EFI_STATUS efi_main(EFI_HANDLE ImageHandle, struct EFI_SYSTEM_TABLE *st) {
 
   unsigned long long arg1 = (unsigned long long)SystemTable;
   unsigned long long arg2 = (unsigned long long)&hardware_info;
+  unsigned long long arg3 = (unsigned long long)sum;
   unsigned long long stack_base = KERNEL_START + (16 * MB);
 
   // On success, this loader owns all available memory in the system.
@@ -161,9 +196,10 @@ EFI_STATUS efi_main(EFI_HANDLE ImageHandle, struct EFI_SYSTEM_TABLE *st) {
 
   asm ("mov %0, %%rdi\n"
        "mov %1, %%rsi\n"
-       "mov %2, %%rsp\n"
-       "jmp *%3\n"
-       ::"m"(arg1), "m"(arg2), "m"(stack_base), "m"(KERNEL_START));
+       "mov %2, %%rdx\n"
+       "mov %3, %%rsp\n"
+       "jmp *%4\n"
+       ::"m"(arg1), "m"(arg2), "m"(arg3), "m"(stack_base), "m"(KERNEL_START));
 
   puts(L"Not reached here\r\n");
   while (1);

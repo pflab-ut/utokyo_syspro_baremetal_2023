@@ -15,7 +15,7 @@ apps:
 	make all -C apps
 
 qemu:
-	qemu-system-x86_64 -m 4G -bios ./OVMF.fd -hda fat:rw:./fs \
+	qemu-system-x86_64 -m 4G -bios ./OVMF.fd -hda fat:rw:./fs -smp 32\
 		-netdev user,id=u1,hostfwd=tcp::8080-:80 -device e1000,netdev=u1 \
 		-object filter-dump,id=f1,netdev=u1,file=dump.pcap \
 		-monitor unix:qemu-monitor-socket,server,nowait
@@ -40,6 +40,7 @@ docker-make:
 	docker run -it --rm -v $(CURDIR):/work $(DOCKER_IMAGE_NAME) make -C /work
 
 clean:
+	rm OVMF.fd
 	make clean -C bootloader
 	make clean -C kernel
 	make clean -C apps
