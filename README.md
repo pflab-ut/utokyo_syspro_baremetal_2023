@@ -3,9 +3,9 @@ Baremetal environment for "System programming lab" class in Dept. of Information
 
 
 ## Dependencies
-The bootloader is implemented referencing UEFI Specification Version 2.8 ([PDF](https://uefi.org/sites/default/files/resources/UEFI_Spec_2_8_final.pdf)).
-To support UEFI boot in qemu emulation, OVMF is automatically installed by `make` command. The following tools need to
-be installed by users to build the bootloader, the kernel and the apps.
+The bootloader is implemented referencing UEFI Specification Version 2.8 ([PDF](https://uefi.org/sites/default/files/resources/UEFI_Spec_2_8_final.pdf))
+and UEFI Platform Initialization Specification ([PDF](https://uefi.org/sites/default/files/resources/PI_Spec_1_7_final_Jan_2019.pdf)).
+The following tools need to be installed by users to build the bootloader, the kernel and the apps.
 
 - x86_64-w64-mingw32-gcc : Cross-compiler for building UEFI bootloader
 - qemu-system-x86_64 : Emulator
@@ -13,7 +13,7 @@ be installed by users to build the bootloader, the kernel and the apps.
 ```
 $ sudo apt update
 $ sudo apt upgrade
-$ sudo apt install -y mingw-w64 qemu-system-x86 unzip git make gcc
+$ sudo apt install -y mingw-w64 qemu-system-x86 unzip git make gcc ovmf
 ```
 
 The bootloader can be built on any environment if the cross-compiler `x86_64-w64-mingw32-gcc` is installed. The kernel and the apps have to be built on x86_64 Linux (in order to use `-T` option of `ld` command). I do not assume some specific
@@ -30,14 +30,15 @@ gcc (Ubuntu 7.5.0-3ubuntu1~18.04) 7.5.0
 After installing `x86_64-w64-mingw32-gcc` and `qemu-system-x86_64`, do the following commands.
 
 ```
-$ git clone https://github.com/sykwer/utokyo_syspro_baremetal
-$ cd utokyo_syspro_baremetal/kernel
+$ git clone https://github.com/pflab-ut/utokyo_syspro_baremetal_2021
+$ cd utokyo_syspro_baremetal_2021
+$ make
 $ make qemu
 ```
 
 The kernel will paint all the part of the window in ayame color.
 
-![alt Physical memory map](https://raw.githubusercontent.com/sykwer/utokyo_syspro_baremetal/master/images/ayame.png)
+![alt Physical memory map](https://raw.githubusercontent.com/pflab-ut/utokyo_syspro_baremetal_2021/master/images/ayame.png)
 
 
 ## Boot from USB
@@ -50,7 +51,7 @@ Booting from USB is supported on UEFI-boot suppored systems. The writer tested U
 To boot from USB, follow the instructions below.
 
 - Format Partition1 of USB drive in FAT32
-- Run 'make' command in 'kernel' directory
+- Run 'make' command in the top directory
 - Copy all the files under 'fs/' directory to USB
 - Boot from USB on your real machine
 
@@ -97,11 +98,11 @@ $ sudo mkfs.vfat -F 32 /dev/sdc1
 $ sudo mount /dev/sdc1 /path/to/mount-point
 
 // Prepare files under fs directory
-$ cd /path/to/utokyo_syspro_baremetal/kernel
+$ cd /path/to/utokyo_syspro_baremetal_2021
 $ make
 
 // Copy file system
-$ sudo cp -R /path/to/utokyo_syspro_baremetal/fs/* /path/to/mount-point/
+$ sudo cp -R /path/to/utokyo_syspro_baremetal_2021/fs/* /path/to/mount-point/
 
 // Unmount
 $ sudo umount /path/to/mount-point
