@@ -4,7 +4,7 @@ LDFLAGS = -s -x
 
 all: kernel
 
-kernel: kernel.o  segmentation.o hardware.o load_gdt.o font.o
+kernel: kernel.o  segmentation.o hardware.o load_gdt.o font.o sched.o
 	ld $(LDFLAGS) -T kernel.ld -o $@ $+
 
 %.o: %.c

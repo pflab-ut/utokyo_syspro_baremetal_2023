@@ -1,5 +1,6 @@
 #include "hardware.h"
 #include "segmentation.h"
+#include "sched.h"
 
 #pragma GCC diagnostic ignored "-Wunused-parameter" // For l6 (kernel_param_dummy)
 
