@@ -17,3 +17,22 @@ lapic_intr_handler:
   pop %rbx
   pop %rax
   iretq
+
+.global syscall_handler
+syscall_handler:
+  // Save Registers
+  //
+  // Here (9-A)
+  //
+
+  // Call syscall_handler_internal
+  //
+  // Here (9-A)
+  //
+
+  // Resume
+  //
+  // Here (9-A)
+  //
+
+  iretq

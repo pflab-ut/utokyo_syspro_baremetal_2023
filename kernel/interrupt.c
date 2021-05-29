@@ -14,6 +14,8 @@ struct InterruptDescriptor IDT[256];
 
 void lapic_intr_handler();
 
+void syscall_handler();
+
 static void load_idt_to_idtr() {
   // Set idtr
   //
@@ -26,12 +28,20 @@ void init_intr() {
   unsigned short cs;
   asm volatile ("mov %%cs, %0" : "=r"(cs));
 
-  void* handler;
-  asm volatile ("lea lapic_intr_handler(%%rip), %0" : "=r"(handler));
+  void* lapic_intr_handler_addr;
+  asm volatile ("lea lapic_intr_handler(%%rip), %0" : "=r"(lapic_intr_handler_addr));
+
+  void* syscall_handler_addr;
+  asm volatile ("lea syscall_handler(%%rip), %[handler]" : [handler]"=r"(syscall_handler_addr));
 
   // Register Local APIC handler
   //
   // Here (8-B)
+  //
+
+  // Register Sycall handler
+  //
+  // Here (9-A)
   //
 
   // Tell CPU the location of IDT
