@@ -1,6 +1,6 @@
 DOCKER_IMAGE_NAME = syspro
 
-all: bootloader kernel apps OVMF.fd OVMF.fd copy
+all: bootloader kernel apps copy
 
 OVMF.fd:
 	cp /usr/share/ovmf/OVMF.fd $(CURDIR)
@@ -14,7 +14,7 @@ kernel:
 apps:
 	make all -C apps
 
-qemu:
+qemu: OVMF.fd
 	qemu-system-x86_64 -m 4G -bios ./OVMF.fd -hda fat:rw:./fs -smp 32\
 		-netdev user,id=u1,hostfwd=tcp::8080-:80 -device e1000,netdev=u1 \
 		-object filter-dump,id=f1,netdev=u1,file=dump.pcap \
