@@ -2,6 +2,7 @@
 #include "segmentation.h"
 #include "sched.h"
 #include "interrupt.h"
+#include "memory.h"
 
 #pragma GCC diagnostic ignored "-Wunused-parameter" // For l6 (kernel_param_dummy)
 
@@ -10,6 +11,7 @@ void start(void *SystemTable __attribute__ ((unused)), struct HardwareInfo *_har
   // Do not use _hardware_info directry since this data is located in UEFI-app space
   hardware_info = *_hardware_info;
   init_segmentation();
+  init_virtual_memory();
   init_intr();
   // To here - Put this part at the top of start() function
 
