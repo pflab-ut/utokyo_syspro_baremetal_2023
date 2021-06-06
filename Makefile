@@ -16,7 +16,7 @@ apps:
 
 qemu: OVMF.fd
 	qemu-system-x86_64 -m 4G -bios ./OVMF.fd -hda fat:rw:./fs -smp 32\
-		-nic user,id=n1,model=virtio,hostfwd=tcp::8080-:80\
+		-netdev user,id=n1,hostfwd=tcp::8080-:80 -device virtio-net-pci,netdev=n1\
 		-object filter-dump,id=f1,netdev=n1,file=dump.pcap \
 		-monitor unix:qemu-monitor-socket,server,nowait
 
