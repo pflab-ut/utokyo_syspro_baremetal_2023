@@ -40,9 +40,10 @@ docker-make:
 	docker run -it --rm -v $(CURDIR):/work $(DOCKER_IMAGE_NAME) make -C /work
 
 clean:
-	rm OVMF.fd dump.pcap
-	make clean -C bootloader
-	make clean -C kernel
-	make clean -C apps
+	rm -r fs || :
+	rm OVMF.fd dump.pcap || :
+	make clean -C bootloader || :
+	make clean -C kernel || :
+	make clean -C apps || :
 
 .PHONY: all bootloader kernel apps copy docker-run docker-build qemu clean
