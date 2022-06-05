@@ -1,5 +1,5 @@
 # utokyo_syspro_baremetal
-Baremetal environment for "System programming lab" class in Dept. of Information Science, The University of Tokyo. (originated from [sykwer/utokyo_syspro_baremetal](https://github.com/sykwer/utokyo_syspro_baremetal))
+Baremetal environment for "System programming lab" class in Dept. of Information Science, The University of Tokyo. (originated from [sykwer/utokyo_syspro_baremetal](https://github.com/sykwer/utokyo_syspro_baremetal) and [pflab-ut/utokyo_syspro_baremetal_2021](https://github.com/pflab-ut/utokyo_syspro_baremetal_2021))
 
 
 ## Dependencies
@@ -30,15 +30,15 @@ gcc (Ubuntu 7.5.0-3ubuntu1~18.04) 7.5.0
 After installing `x86_64-w64-mingw32-gcc` and `qemu-system-x86_64`, do the following commands.
 
 ```
-$ git clone https://github.com/pflab-ut/utokyo_syspro_baremetal_2021
-$ cd utokyo_syspro_baremetal_2021
+$ git clone https://github.com/pflab-ut/utokyo_syspro_baremetal_2022
+$ cd utokyo_syspro_baremetal_2022
 $ make
 $ make qemu
 ```
 
 The kernel will paint all the part of the window in ayame color.
 
-![alt Physical memory map](https://raw.githubusercontent.com/pflab-ut/utokyo_syspro_baremetal_2021/master/images/ayame.png)
+![alt Physical memory map](https://raw.githubusercontent.com/6iKezbAD3CZnf/utokyo_syspro_baremetal_2022/master/images/ayame.png)
 
 ## (OPTION) Build Environment Using Docker
 This repository provides the official build environment using Docker.
@@ -106,11 +106,11 @@ $ sudo mkfs.vfat -F 32 /dev/sdc1
 $ sudo mount /dev/sdc1 /path/to/mount-point
 
 // Prepare files under fs directory
-$ cd /path/to/utokyo_syspro_baremetal_2021
+$ cd /path/to/utokyo_syspro_baremetal_2022
 $ make
 
 // Copy file system
-$ sudo cp -R /path/to/utokyo_syspro_baremetal_2021/fs/* /path/to/mount-point/
+$ sudo cp -R /path/to/utokyo_syspro_baremetal_2022/fs/* /path/to/mount-point/
 
 // Unmount
 $ sudo umount /path/to/mount-point
@@ -124,4 +124,4 @@ The built images of the kernel and the apps are loaded by the bootloader to the 
 - app2   : origin=0x105000000, length=16MiB
 - app3   : origin=0x106000000, length=16MiB
 
-![alt Physical memory map](https://raw.githubusercontent.com/sykwer/utokyo_syspro_baremetal/master/images/memory_map.png)
+![alt Physical memory map](https://raw.githubusercontent.com/6iKezbAD3CZnf/utokyo_syspro_baremetal_2022/master/images/memory_map.png)
