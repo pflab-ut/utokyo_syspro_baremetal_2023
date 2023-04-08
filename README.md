@@ -27,12 +27,27 @@ gcc (Ubuntu 7.5.0-3ubuntu1~18.04) 7.5.0
 
 
 ## Quick start
+First, clone this repo with the following commands.
+```
+$ git clone https://github.com/pflab-ut/utokyo_syspro_baremetal_2023
+$ cd utokyo_syspro_baremetal_2023
+```
+
+### Build with Docker (Recommended)
+This repository provides the official build environment using Docker.
+Run the following commands after installing Docker on your system.
+
+```
+$ make docker-build # Only the first time
+$ make docker-make
+$ make qemu
+```
+
+### Local Build
 After installing `x86_64-w64-mingw32-gcc` and `qemu-system-x86_64`, do the following commands.
 
 ```
-$ git clone https://github.com/pflab-ut/utokyo_syspro_baremetal_2022
-$ cd utokyo_syspro_baremetal_2022
-$ make
+$ make local
 $ make qemu
 ```
 
@@ -40,16 +55,7 @@ The kernel will paint all the part of the window in ayame color.
 
 ![alt Physical memory map](https://raw.githubusercontent.com/6iKezbAD3CZnf/utokyo_syspro_baremetal_2022/master/images/ayame.png)
 
-## (OPTION) Build Environment Using Docker
-This repository provides the official build environment using Docker.
-If needed, do the following commands after installing Docker by yourself.
-
-```
-$ make docker-build # Only the first time
-$ make docker-make
-```
-
-## Boot from USB
+## (OPTION) Boot from USB
 Booting from USB is supported on UEFI-boot suppored systems. The writer tested USB boot on the following machines.
 
 - HP ZBook 15v G5

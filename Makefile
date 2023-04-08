@@ -1,9 +1,11 @@
 DOCKER_IMAGE_NAME = syspro
+DOCKER_CONTAINER_NAME = syspro-builder
 
 all: bootloader kernel apps copy
 
-OVMF.fd:
+local:
 	cp /usr/share/ovmf/OVMF.fd $(CURDIR)
+	make
 
 bootloader:
 	make all -C bootloader
@@ -14,7 +16,7 @@ kernel:
 apps:
 	make all -C apps
 
-qemu: OVMF.fd
+qemu:
 	qemu-system-x86_64 -m 4G -bios ./OVMF.fd -hda fat:rw:./fs -smp 32\
 		-netdev user,id=n1,hostfwd=tcp::8080-:80 -device virtio-net-pci,netdev=n1\
 		-object filter-dump,id=f1,netdev=n1,file=dump.pcap \
@@ -37,7 +39,9 @@ docker-build: Dockerfile
 	  --build-arg GROUP_ID=$(shell id -g) .
 
 docker-make:
-	docker run -it --rm -v $(CURDIR):/work $(DOCKER_IMAGE_NAME) make -C /work
+	docker run -it --name $(DOCKER_CONTAINER_NAME) -v $(CURDIR):/work $(DOCKER_IMAGE_NAME) make
+	docker cp $(DOCKER_CONTAINER_NAME):/usr/share/ovmf/OVMF.fd $(CURDIR)
+	docker container rm $(DOCKER_CONTAINER_NAME)
 
 clean:
 	rm -r fs || :
@@ -45,5 +49,6 @@ clean:
 	make clean -C bootloader || :
 	make clean -C kernel || :
 	make clean -C apps || :
+	docker container rm -f $(DOCKER_CONTAINER_NAME) || :
 
 .PHONY: all bootloader kernel apps copy docker-run docker-build qemu clean
