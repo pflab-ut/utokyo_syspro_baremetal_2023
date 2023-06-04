@@ -15,7 +15,7 @@ void start(void *SystemTable __attribute__ ((unused)), struct HardwareInfo *_har
   init_intr();
   // To here - Put this part at the top of start() function
 
-  // Delete me. I'm a sample code.
+  // From here - Delete me. I'm a sample code.
   for (unsigned int i = 0; i < hardware_info.fb.height; i++) {
     for (unsigned int j = 0; j < hardware_info.fb.width; j++) {
       struct Pixel *pixel = hardware_info.fb.base + hardware_info.fb.width * i + j;
@@ -27,6 +27,6 @@ void start(void *SystemTable __attribute__ ((unused)), struct HardwareInfo *_har
   }
   // To here - sample code
 
-  // Do not delete it!
+  // Do not delete this line!
   while (1);
 }
