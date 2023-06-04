@@ -17,7 +17,7 @@ apps:
 	make all -C apps
 
 qemu:
-	qemu-system-x86_64 -m 4G -bios ./OVMF.fd -hda fat:rw:./fs -smp 32\
+	qemu-system-x86_64 -m 4G -bios ./OVMF.fd -drive format=raw,file=fat:rw:./fs -smp 32\
 		-netdev user,id=n1,hostfwd=tcp::8080-:80 -device virtio-net-pci,netdev=n1\
 		-object filter-dump,id=f1,netdev=n1,file=dump.pcap \
 		-monitor unix:qemu-monitor-socket,server,nowait
