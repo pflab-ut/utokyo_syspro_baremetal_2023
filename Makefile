@@ -39,7 +39,7 @@ docker-build: Dockerfile
 	  --build-arg GROUP_ID=$(shell id -g) .
 
 docker-make:
-	docker run -it --name $(DOCKER_CONTAINER_NAME) -v $(CURDIR):/work $(DOCKER_IMAGE_NAME) make
+	docker run -it --name $(DOCKER_CONTAINER_NAME) -v $(CURDIR):/work $(DOCKER_IMAGE_NAME) make || :
 	docker cp $(DOCKER_CONTAINER_NAME):/usr/share/ovmf/OVMF.fd $(CURDIR)
 	docker container rm $(DOCKER_CONTAINER_NAME)
 
